@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Music Player</title>
+	<link rel="stylesheet" href="styles.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+</head>
+<body>
+    <div class="player player-grid" role="application" aria-label="Music Player">
+        <div class="left">
+            <div class="artwork" id="artwork" aria-hidden="true"></div>
+        </div>
+        <div class="right">
+            <div class="meta">
+                <div class="title" id="title">—</div>
+                <div class="artist" id="artist">—</div>
+            </div>
+			<div class="controls">
+				<button id="prev" aria-label="Previous"><i class="fa-solid fa-backward-step"></i></button>
+				<button id="play" aria-label="Play/Pause"><i class="fa-solid fa-play"></i></button>
+				<button id="next" aria-label="Next"><i class="fa-solid fa-forward-step"></i></button>
+				<div class="volume">
+					<button id="mute" aria-label="Mute/Unmute"><i class="fa-solid fa-volume-high"></i></button>
+					<input id="volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
+				</div>
+			</div>
+            <div class="time">
+                <span id="current">0:00</span>
+                <div class="progress" id="progress" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <div class="bottom">
+            <ul class="playlist" id="playlist" aria-label="Playlist"></ul>
+        </div>
+    </div>
+
+	<audio id="audio" preload="metadata"></audio>
+	<script src="script.js"></script>
+</body>
+</html>

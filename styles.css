@@ -1,0 +1,137 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #0a0a0a, #121212 60%);
+    color: #eaeaea;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+/* Soft animated color blobs */
+body::before, body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+body::before {
+    background: radial-gradient(40% 35% at 8% 6%, rgba(29,185,84,0.25), transparent 60%);
+    filter: blur(40px);
+    transform: translate3d(0,0,0);
+    animation: floatBlob1 18s ease-in-out infinite alternate;
+    z-index: 0;
+}
+body::after {
+    background: radial-gradient(45% 40% at 92% 88%, rgba(59,130,246,0.22), transparent 60%),
+                radial-gradient(35% 30% at 78% 24%, rgba(167,139,250,0.18), transparent 60%);
+    filter: blur(50px);
+    transform: translate3d(0,0,0);
+    animation: floatBlob2 22s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes floatBlob1 {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(20px, 30px, 0) scale(1.05); }
+}
+@keyframes floatBlob2 {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(-30px, -20px, 0) scale(1.06); }
+}
+
+.player {
+    width: 100%;
+    max-width: 920px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    padding: 16px;
+}
+
+.player-grid { display: grid; grid-template-columns: 1.2fr 1.8fr; grid-template-rows: auto auto; gap: 16px; }
+.player-grid .left { grid-column: 1; grid-row: 1 / span 2; }
+.player-grid .right { grid-column: 2; grid-row: 1; display: grid; gap: 12px; align-content: start; }
+.player-grid .bottom { grid-column: 2; grid-row: 2; }
+
+.artwork {
+    width: 100%;
+    aspect-ratio: 1/1;
+	border-radius: 8px;
+	background-color: #111;
+	background-size: contain; /* show full image without cropping */
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-bottom: 12px;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.meta { margin-bottom: 8px; }
+.title { font-weight: 700; font-size: 18px; color: #fff; letter-spacing: 0.2px; }
+.artist { color: #cbd5e1; font-size: 14px; opacity: 0.9; }
+
+.time { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: 8px; margin: 12px 0; }
+#current, #duration { font-variant-numeric: tabular-nums; font-size: 12px; color: #cbd5e1; letter-spacing: 0.2px; }
+.progress { position: relative; height: 8px; background: rgba(255,255,255,0.08); border-radius: 999px; cursor: pointer; outline: none; }
+.progress:hover { background: rgba(255,255,255,0.12); }
+.bar { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #1db954; border-radius: 999px; box-shadow: 0 0 8px rgba(29,185,84,0.35); }
+.bar::after { content: ""; position: absolute; right: 0; top: 50%; transform: translate(50%, -50%); width: 14px; height: 14px; border-radius: 50%; background: #1db954; box-shadow: 0 0 0 3px rgba(29,185,84,0.25); }
+
+.controls { display: flex; align-items: center; gap: 10px; justify-content: flex-start; margin-top: 6px; flex-wrap: wrap; }
+.controls button { appearance: none; border: 1px solid #2a2a2a; background: #2a2a2a; color: #eaeaea; border-radius: 10px; height: 44px; width: 56px; font-size: 18px; cursor: pointer; transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease; }
+.controls button:hover { background: #323232; }
+.controls button:active { transform: translateY(1px) scale(0.98); }
+.controls button:focus { outline: none; }
+.controls button:focus-visible { outline: 2px solid #1db954; outline-offset: 2px; }
+.controls button:active { transform: translateY(1px) scale(0.98); }
+.volume { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+#volume { width: 120px; accent-color: #1db954; }
+
+.playlist { list-style: none; margin: 0; padding: 0; max-height: 260px; overflow: auto; border-top: 1px solid rgba(255,255,255,0.12); }
+.playlist li { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 10px 2px; border-bottom: 1px dashed rgba(255,255,255,0.08); cursor: pointer; }
+.playlist li:hover { background: rgba(255,255,255,0.04); }
+.playlist .track-title { font-size: 14px; color: #e5e7eb; }
+.playlist .track-artist { font-size: 12px; color: #9ca3af; }
+.playlist .track-time { font-variant-numeric: tabular-nums; color: #9ca3af; font-size: 12px; }
+.playlist li.active { background: #232323; border-left: 3px solid #1db954; }
+
+/* Scrollbar styling for playlist (WebKit) */
+.playlist::-webkit-scrollbar { height: 8px; width: 8px; }
+.playlist::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 8px; }
+.playlist::-webkit-scrollbar-track { background: transparent; }
+
+/* Focus styles for interactive elements */
+.progress:focus-visible { box-shadow: 0 0 0 3px rgba(29,185,84,0.35) inset; }
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+	* { transition: none !important; animation: none !important; }
+}
+
+/* Keep playlist full width only on very small screens */
+@media (max-width: 640px) {
+    .player-grid .bottom { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+    #volume { width: 90px; }
+    .controls button { width: 48px; }
+}
+
+/* Theme: Spotify-like */
+.player {
+    background: rgba(24, 24, 24, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.artwork { background: linear-gradient(135deg, #222, #111); border-radius: 8px; }
+.bar { background: #1db954; box-shadow: 0 0 8px rgba(29,185,84,0.35); }
+.controls button { border-color: rgba(255,255,255,0.12); background: rgba(32,32,32,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04); }
+.controls button:hover { background: rgba(46,46,46,0.6); border-color: rgba(255,255,255,0.18); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+.playlist li.active { background: #232323; border-left: 3px solid #1db954; }
